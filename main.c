@@ -80,7 +80,6 @@ int main()
             printf("Korisnicko ime nije tacno\n");
     }
     while(!dozvola);
-    printf("Danas je los dan");
 
 
 
