@@ -52,13 +52,29 @@ char * unos_kor_sifre(char * kor_sifra) //pisanje * umjesto sifre
     return kor_sifra;
 
 }
+void kreiranje_def_kat(FILE*f1,FILE*f2,FILE*f3,FILE*f4)
+{
+    f1=fopen("izlozbe.txt","a");
+    fclose(f1);
+    f2=fopen("koncerti.txt","a");
+    fclose(f2);
+    f3=fopen("promocije.txt","a");
+    fclose(f3);
+    f4=fopen("imena_kat.txt","a");
+    fprintf(f4,"izlozbe");
+    fprintf(f4," koncerti");
+    fprintf(f4," promocije");
+    fclose(f4);
+}
 
 int main()
 {
-    char kor_ime[50],kor_sifra[50],user[50],pass[50],c;
-    int i;
+    char kor_ime[50],kor_sifra[50],user[50],pass[50],c,nova_kategorija[50];
+    int i,x,y;
     int dozvola=0;
+    FILE*f3,*f4,*f5,*imena_kat;
     citanje_podataka(user,pass);
+    kreiranje_def_kat(f3,f4,f5,imena_kat);
     do
     {
         printf("Unesi ime\n");
@@ -80,6 +96,31 @@ int main()
             printf("Korisnicko ime nije tacno\n");
     }
     while(!dozvola);
+    do
+    {
+        printf("Izaberite: 1.Dodaj novu kategoriju. 2.Prikazi postojece kategorije");
+        scanf("%d",&x);
+        if(x==1)
+        {
+            printf("Unesite ime nove kategorije\n");
+            scanf("%s",nova_kategorija);
+            FILE*imena_kat=fopen("imena_kat.txt","a");//upisuje imena kategorija u datoteku
+            fprintf(imena_kat," %s",nova_kategorija);//
+            fclose(imena_kat);
+
+            strcat(nova_kategorija,".txt");//pravi novu datoteku sa imenom kategorije
+            FILE*f2=fopen(nova_kategorija,"w");
+            fclose(f2);
+
+        }
+
+if (x==2)
+    {
+printf("kraj");
+    }
+    }
+    while(x==1);
+
 
 
 
