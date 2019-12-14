@@ -61,16 +61,26 @@ void kreiranje_def_kat(FILE*f1,FILE*f2,FILE*f3,FILE*f4)
     f3=fopen("promocije.txt","a");
     fclose(f3);
     f4=fopen("imena_kat.txt","a");
-    fprintf(f4,"izlozbe");
-    fprintf(f4," koncerti");
-    fprintf(f4," promocije");
+    if (NULL != f4)                 //provjera da li je prazna datoteka
+    {
+        fseek (f4, 0, SEEK_END);
+        int size = ftell(f4);
+
+        if (0 == size)
+        {
+            fprintf(f4,"izlozbe");
+            fprintf(f4," koncerti");
+            fprintf(f4," promocije");
+        }
+    }
+
     fclose(f4);
 }
 
 int main()
 {
-    char kor_ime[50],kor_sifra[50],user[50],pass[50],c,nova_kategorija[50];
-    int i,x,y;
+    char kor_ime[50],kor_sifra[50],user[50],pass[50],c,nova_kategorija[50],ispis_kat[50];
+    int i=0,x,y;
     int dozvola=0;
     FILE*f3,*f4,*f5,*imena_kat;
     citanje_podataka(user,pass);
@@ -104,7 +114,7 @@ int main()
         {
             printf("Unesite ime nove kategorije\n");
             scanf("%s",nova_kategorija);
-            FILE*imena_kat=fopen("imena_kat.txt","a");//upisuje imena kategorija u datoteku
+           imena_kat=fopen("imena_kat.txt","a");//upisuje imena kategorija u datoteku
             fprintf(imena_kat," %s",nova_kategorija);//
             fclose(imena_kat);
 
@@ -116,7 +126,16 @@ int main()
 
 if (x==2)
     {
-printf("kraj");
+imena_kat=fopen("imena_kat.txt","r");
+    if(imena_kat)
+    {
+        while(!feof(imena_kat))
+        {
+            fscanf(imena_kat,"%s",ispis_kat);
+            printf(" %s",ispis_kat);
+
+    }
+    }
     }
     }
     while(x==1);
