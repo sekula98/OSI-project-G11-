@@ -1,6 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include<string.h>
+typedef struct event{
+	char name[100];
+	char location[100];
+	char category[100];
+	char date[20];
+	char time[20];
+	char description[200];
+}EVENT;
+typedef struct node {
+	EVENT info;
+	struct node* next;
+}NODE;
+void delete_bsn(char* s)  //brise \n na kraju stringa
+ {
+	if ((strlen(s) > 0) && (s[strlen(s) - 1] == '\n'))
+		s[strlen(s) - 1] = '\0';
+}
+
+
 void citanje_podataka(char *id,char* pass)
 {
     int c=0;
@@ -134,6 +153,63 @@ void brisanje_kategorije(FILE*imena_kat)
     fclose(imena_kat);
 
 }
+void add_event(NODE **head, EVENT info) { //dodaje novi dogadjaj
+	NODE *p, *newnode = (NODE *)malloc(sizeof(NODE));
+	newnode->info = info;
+	newnode->next = 0;
+	if (*head == 0) *head = newnode;
+	else
+	{
+		for (p = *head; p->next; p = p->next);
+		p->next = newnode;
+	}
+}
+
+void print_events(NODE* list) {
+	while (list) {
+		printf("\nIme: %s", list->info.name);
+		printf("\nDatum: %s", list->info.date);
+		printf("\nVrijeme: %s", list->info.time);
+		printf("\nLokacija: %s", list->info.location);
+		printf("\nKategorija: %s", list->info.category);
+		printf("\nOpis: %s", list->info.description);
+
+		list = list->next;
+	}
+}
+void pull_from_folder(NODE** head) {  //skida sadrzaj datoteke sa dogadjajima u listu
+	FILE* eventsf;
+	if (eventsf = fopen("Dogadjaji.txt", "r")) {
+		if (!feof(eventsf)) { //provjerava da li je datoteka sa dogadjajima prazna
+			EVENT tmp;
+			while (fgets(tmp.name, 101, eventsf)) {
+				delete_bsn(tmp.name);
+				fgets(tmp.category, 101, eventsf); delete_bsn(tmp.category);
+				fgets(tmp.date, 21, eventsf); delete_bsn(tmp.date);
+				fgets(tmp.time, 21, eventsf); delete_bsn(tmp.time);
+				fgets(tmp.location, 101, eventsf); delete_bsn(tmp.location);
+				fgets(tmp.description, 201, eventsf); delete_bsn(tmp.description);
+				add_event(head, tmp);
+			}
+			fclose(eventsf);
+		}
+		else printf("Greska pri otvaranju datoteke sa dogadjajima za skidanje podataka o dogadjajima!");
+	}
+}
+
+void push_to_folder(NODE*node) { //vraca listu sa dogadjajima u datoteku
+	FILE* eventsf;
+	remove("Dogadjaji.txt");
+	if (eventsf = fopen("Dogadjaji.txt", "w")) {
+		while (node) {
+			fprintf(eventsf, "%s\n%s\n%s\n%s\n%s\n%s\n", node->info.name, node->info.category, node->info.date, node->info.time, node->info.location, node->info.description);
+			node = node->next;
+		}
+		fclose(eventsf);
+	}
+	else printf("\nGreska pri otvaranju datoteke sa dogadjajima za azuriranje podataka!");
+}
+
 int main()
 {
     char kor_ime[50],kor_sifra[50],user[50],pass[50];
