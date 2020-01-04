@@ -13,6 +13,19 @@ typedef struct node {
 	EVENT info;
 	struct node* next;
 }NODE;
+void citanje_podataka(char *,char*);
+char * unos_kor_sifre(char * );
+void kreiranje_def_kat(FILE*);
+void dodavanje_kategorije(FILE*);
+void prikaz_kategorija(FILE*);
+void brisanje_kategorije(FILE*);
+void pull_from_folder(NODE**); //skida sadrzaj datoteke sa dogadjajima u listu
+void push_to_folder(NODE*); //vraca listu sa dogadjajima u datoteku
+void choose_category(FILE* fcategories, char*); //bira kategoriju dogadjaja
+void add_event(NODE**, EVENT); //dodaje novi dogadjaj
+EVENT event_info(); //unos informacija o dogadjaju
+void delete_bsn(char*); //brise \n na kraju stringa
+
 void delete_bsn(char* s)  //brise \n na kraju stringa
  {
 	if ((strlen(s) > 0) && (s[strlen(s) - 1] == '\n'))
@@ -78,7 +91,7 @@ void kreiranje_def_kat(FILE*f4)
 //    fclose(f2);
 //    f3=fopen("promocije.txt","a");
 //    fclose(f3);
-//    f4=fopen("imena_kat.txt","a");
+    f4=fopen("imena_kat.txt","a");
     if (NULL != f4)                 //provjera da li je prazna datoteka
     {
         fseek (f4, 0, SEEK_END);
@@ -153,6 +166,51 @@ void brisanje_kategorije(FILE*imena_kat)
     fclose(imena_kat);
 
 }
+void choose_category(FILE* fcategories, char* s) {
+	char category[100];
+	int i = 1;
+	int j;
+	int tmp;
+	printf("Postojece kategorije:\n");
+	while (fgets(category, 101, fcategories)) {
+		printf("%d. %s", i, category);
+		i++;
+	}
+	printf("\n\nUpisite redni broj odabrane kategorije: ");
+	scanf("%d", &tmp);
+	rewind(fcategories);
+	for ( j = 0; j < tmp; j++) {
+		fgets(category, 21, fcategories);
+	}
+	printf("odabrali ste %s",category);
+	delete_bsn(category);
+	strcpy(s, category);
+}
+EVENT event_info() {
+	FILE* fcategories;
+	EVENT event;
+	char trash[100];
+	char category[100];
+	if (fcategories = fopen("imena_kat.txt", "r")) {
+		choose_category(fcategories, category);
+		strcpy(event.category, category);
+		fclose(fcategories);
+	}
+	else printf("Greska pri otvaranju datoteke sa kategorijama!");
+	fgets(trash, 101, stdin);
+
+
+	printf("\nNaziv dogadjaja: ");
+	fgets(event.name, 101, stdin);
+	printf("");
+	delete_bsn(event.name);
+	printf("\nDatum odrzavanja: "); fgets(event.date, 21, stdin); delete_bsn(event.date);
+	printf("\nVrijeme odrzavanja: "); fgets(event.time, 21, stdin); delete_bsn(event.time);
+	printf("\nLokacija odrzavanja: "); fgets(event.location, 101, stdin); delete_bsn(event.location);
+	printf("\nOpis dogadjaja: "); fgets(event.description, 201, stdin); delete_bsn(event.description);
+
+	return event;
+}
 void add_event(NODE **head, EVENT info) { //dodaje novi dogadjaj
 	NODE *p, *newnode = (NODE *)malloc(sizeof(NODE));
 	newnode->info = info;
@@ -165,18 +223,6 @@ void add_event(NODE **head, EVENT info) { //dodaje novi dogadjaj
 	}
 }
 
-void print_events(NODE* list) {
-	while (list) {
-		printf("\nIme: %s", list->info.name);
-		printf("\nDatum: %s", list->info.date);
-		printf("\nVrijeme: %s", list->info.time);
-		printf("\nLokacija: %s", list->info.location);
-		printf("\nKategorija: %s", list->info.category);
-		printf("\nOpis: %s", list->info.description);
-
-		list = list->next;
-	}
-}
 void pull_from_folder(NODE** head) {  //skida sadrzaj datoteke sa dogadjajima u listu
 	FILE* eventsf;
 	if (eventsf = fopen("Dogadjaji.txt", "r")) {
@@ -215,6 +261,8 @@ int main()
     char kor_ime[50],kor_sifra[50],user[50],pass[50];
     int i=0,x;
     int dozvola=0;
+    NODE* head = NULL;
+	pull_from_folder(&head);
     FILE*imena_kat;
     citanje_podataka(user,pass);
     kreiranje_def_kat(imena_kat);
@@ -241,7 +289,7 @@ int main()
     while(!dozvola);
     do
     {
-        printf("\nIzaberite: 1.Dodaj novu kategoriju. 2.Prikazi postojece kategorije. 3.Obrisi kategoriju. 4.Kraj\n");
+        printf("\nIzaberite: 1.Dodaj novu kategoriju. 2.Prikazi postojece kategorije. 3.Obrisi kategoriju. 4.Dodaj dogadjaj 5.Kraj\n");
         scanf("%d",&x);
         if(x==1)
         {
@@ -256,14 +304,20 @@ int main()
         {
             brisanje_kategorije(imena_kat);
         }
-
         if (x==4)
+        {
+            add_event(&head, event_info());
+            push_to_folder(head);
+        }
+
+        if (x==5)
         {
             printf("Kraj");
         }
+
     }
 
-    while(x==1||x==2||x==3);
+    while(x==1||x==2||x==3 || x==4);
 
 
 
