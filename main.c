@@ -39,6 +39,7 @@ void quiz(); //Kviz
 void comment_event(char*); //Prikaz postojecih i dodavanje novi komentara na dogadjaj. Argument je ime dogadjaja
 int delete_event(NODE*); //Brise dogadjaj koji se salje kao arg.
 void change_info(NODE*); //Mijenja podatke o dogadjaju koji se salje kao arg.
+int number_of_events(NODE*);//prebrojava broj dogadjaja
 void sort_by_name(NODE** head, int count); //Sortira dogadjaje po imenu
 void sort_by_location(NODE** head, int count); //Sortira dogadjaje po lokaciji
 void sort_by_date(NODE** head, int count); //Sortira dogadjaje po datumu
@@ -52,79 +53,105 @@ int print_all_events_info(NODE* list);
 
 int main() {
 
-
     int i=0,x,y,trg=0,n,m;
     char trash[200];
     int dozvola=0;
     NODE* head = NULL;
-	pull_from_folder(&head);
+    pull_from_folder(&head);
     FILE*imena_kat;
     kreiranje_def_kat(imena_kat);
 
     login();
-  fgets(trash,201,stdin);
+    fgets(trash,201,stdin);
     do
-    {   printf("Izaberite: 1.Upravljanje kategorijama 2.Upravljanje dogadjajima 3.Kraj\n");
+    {
+        printf("Izaberite: 1.Upravljanje kategorijama 2.Upravljanje dogadjajima 3.Kraj\n");
 
         y=choose_from_menu(3);
         if (y==1)
-    {
-        do{
-        printf("\nIzaberite: 1.Dodaj novu kategoriju. 2.Prikazi postojece kategorije. 3.Obrisi kategoriju 4.Nazad");
-       x=choose_from_menu(4);
-        if(x==1)
         {
-            dodavanje_kategorije(imena_kat);
-        }
-
-        if (x==2)
-        {
-            prikaz_kategorija(imena_kat);
-        }
-        if(x==3)
-        {
-            brisanje_kategorije(imena_kat);
-        }
-        if(x==4)
-           trg=1;
-        }
-        while(!trg);
-
-    }
-        else if(y==2)
-    {    trg=0;
-        do
+            do
             {
-        printf("\nIzaberite iz menija:\n\n1) Prikazi dogadjaje  2) Dodaj novi dogadjaj  3) Izbrisi dogadjaj\n4) Izmijeni dogadjaj 5) Povratak\n");
-        x=choose_from_menu(5);
-        if(x==1)
-        {
-        print_all_events_info(head);
-        }
-        if (x==2)
-        {
-            add_event(&head, event_info());
-            push_to_folder(head);
-        }
-        if (x==3)
-        {
-           n=print_all_events(head);
-           printf("\nIzaberite koji dogadjaj zelite da izbrisete\n");
-            m=choose_from_menu(n);
-          delete_event(choose_event(head,m));
-          push_to_folder(head);
-        }
-        if (x==4)
-        {
+                printf("\nIzaberite: 1.Dodaj novu kategoriju. 2.Prikazi postojece kategorije. 3.Obrisi kategoriju 4.Nazad");
+                x=choose_from_menu(4);
+                if(x==1)
+                {
+                    dodavanje_kategorije(imena_kat);
+                }
+
+                if (x==2)
+                {
+                    prikaz_kategorija(imena_kat);
+                }
+                if(x==3)
+                {
+                    brisanje_kategorije(imena_kat);
+                }
+                if(x==4)
+                    trg=1;
+            }
+            while(!trg);
 
         }
-        if (x==5)
-           trg=1;
+        else if(y==2)
+        {
+            trg=0;
+            do
+            {
+                printf("\nIzaberite iz menija:\n\n1) Prikazi dogadjaje  2) Dodaj novi dogadjaj  3) Izbrisi dogadjaj\n4) Izmijeni dogadjaj 5) Povratak\n");
+                x=choose_from_menu(5);
+                if(x==1)
+                {
+                    int h,g;
+                    print_all_events_info(head);
+                    printf("\nDa li zelite sortirati dogadjaje? 1.Da 2.Ne\n");
+                    h=choose_from_menu(2);
+                    if(h==1)
+                    {
+                        printf("Izaberite po kojem polju ih zelite sortirati 1.Datum 2.Lokacija 3.Ime?\n");
+                        g=choose_from_menu(3);
+                        n=number_of_events(head);
+                        if(g==1)
+                        {
+                            sort_by_date(&head,n);
+                        }
+                        else if(g==2)
+                        {
+                            sort_by_location(&head,n);
+                        }
+                        else if(g==3)
+                        {
+                            sort_by_name(&head,n);
+                        }
+                    }
+                }
+                if (x==2)
+                {
+                    add_event(&head, event_info());
+                    push_to_folder(head);
+                }
+                if (x==3)
+                {
+                    n=print_all_events(head);
+                    printf("\nIzaberite koji dogadjaj zelite da izbrisete\n");
+                    m=choose_from_menu(n);
+                    delete_event(choose_event(head,m));
+
+                }
+                if (x==4)
+                {
+                    n=print_all_events(head);
+                    printf("\nIzaberite koji dogadjaj zelite da izmjenite\n");
+                    m=choose_from_menu(n);
+                    change_info(choose_event(head,m));
+                }
+                if (x==5)
+                    trg=1;
+            }
+            while(!trg);
         }
-        while(!trg);
-    }
-    else if(y==3)
-        printf("Kraj");
+        else if(y==3)
+            printf("Kraj");
 
     }
 
@@ -506,6 +533,15 @@ int print_all_events_info(NODE* list) {
 	printf("\n================================================================================");
 	return n;
 }
+int number_of_events(NODE*list)
+{
+   int n = 0;
+   while (list) {
+		list = list->next;
+		n++;
+	}
+	return n;
+}
 
 void print_event_info(NODE* node) {
 	printf("\nIme: %s", node->info.name);
@@ -581,27 +617,27 @@ void change_info(NODE* node) {
 	printf("\nSta zelite izmjeniti? ");
 	printf("\n1.Naziv        2.Datum        3.Vrijeme");
 	printf("\n4.Lokacija     5.Kategorija   6.Opis   ");
-	scanf("%d", &tmp);
 
-	if (tmp == 1) { printf("\nIme: "); scanf("&s", node->info.name); }
+    tmp=choose_from_menu(6);
+	if (tmp == 1) { printf("\nIme: "); fgets(node->info.name,100,stdin); }
 	else if (tmp == 2) {
 		printf("\nDatum odrzavanja: ");
 		int i;
 		do { printf("\nDan: "); i = date_input(31, node->info.day); } while (!i);
 		do { printf("\nMjesec: "); i = date_input(12, node->info.month); } while (!i);
-		do { printf("\nGodina: "); i = date_input(999, node->info.year); } while (!i);
+		do { printf("\nGodina: "); i = date_input(9999, node->info.year); } while (!i);
 	}
 	else if (tmp == 3) {
-		printf("\nVrijeme:");  scanf("&s", node->info.time);
+		printf("\nVrijeme:");  fgets(node->info.time,100,stdin);
 	}
 	else if (tmp == 4) {
-		printf("\nLokacija:");  scanf("&s", node->info.location);
+		printf("\nLokacija:");  fgets(node->info.location,100,stdin);
 	}
 	else if (tmp == 5) {
-		printf("\nKategorija:");  scanf("&s", node->info.category);
+		printf("\nKategorija:");  fgets(node->info.category,100,stdin);
 	}
 	else if (tmp == 6) {
-		printf("\nOpis:");  scanf("&s", node->info.description);
+		printf("\nOpis:");  fgets(node->info.description,100,stdin);
 	}
 	else printf("Pogresan unos!"); //Onemoguciti pogresan unos!
 }
