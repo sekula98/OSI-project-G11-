@@ -92,7 +92,7 @@ int main() {
 
     }
         else if(y==2)
-    {
+    {    trg=0;
         do
             {
         printf("\nIzaberite iz menija:\n\n1) Prikazi dogadjaje  2) Dodaj novi dogadjaj  3) Izbrisi dogadjaj\n4) Izmijeni dogadjaj 5) Povratak\n");
