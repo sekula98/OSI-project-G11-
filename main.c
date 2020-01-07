@@ -123,6 +123,7 @@ int main() {
                         h=choose_from_menu(2);
                         if(h==1)
                         {
+                           int k=0;
                             printf("\nPo kojem polju ih zelite sortirati?");
                             printf("\n--------------------------------------------------------------------------------");
                             printf("\n1.Datum  2.Lokacija  3.Ime\n4.Kategorija?");
@@ -134,19 +135,26 @@ int main() {
                             if(g==1)
                             {
                                 sort_by_date(&head,n);
+                                k=1;
                             }
                             else if(g==2)
                             {
                                 sort_by_location(&head,n);
+                                k=1;
                             }
                             else if(g==3)
                             {
                                 sort_by_name(&head,n);
+                                k=1;
                             }
                             else if(g==4)
                             {
                                 sort_by_category(&head,n);
+                                k=1;
                             }
+                            if(k)
+                            print_all_events_info(head);
+
                         }
                         else if(h==2)
                         {
@@ -476,7 +484,7 @@ void prikaz_kategorija()
         rewind(imena_kat);
         if (0 == size)
         {
-            printf("Nema komentara za izabrani dogadjaj");
+            printf("Nema kategorija");
         }
         else
         {
@@ -502,19 +510,29 @@ void brisanje_kategorije()
     imena_kat=fopen("imena_kat.txt","r");
     if(imena_kat)
     {
-        printf("Izaberite koju kategoriju zelite da izbrisete\n");
-        while(fgets(niz_kat,51,imena_kat)) //dodaje kategoriju u niz
+        fseek (imena_kat, 0, SEEK_END);
+        int size = ftell(imena_kat);
+        rewind(imena_kat);
+        if (0 == size)
         {
-            pom[i] = (char *)calloc(strlen(niz_kat) + 1, sizeof(char));
-            strcpy(pom[i++], niz_kat);
+            printf("Nema kategorija");
         }
-        for(j=0; j<i; j++)
+        else
         {
-            printf(" %d. %s",j+1,pom[j]);
+            printf("Izaberite koju kategoriju zelite da izbrisete\n");
+            while(fgets(niz_kat,51,imena_kat)) //dodaje kategoriju u niz
+            {
+                pom[i] = (char *)calloc(strlen(niz_kat) + 1, sizeof(char));
+                strcpy(pom[i++], niz_kat);
+            }
+            for(j=0; j<i; j++)
+            {
+                printf(" %d. %s",j+1,pom[j]);
+            }
+            printf("Odaberite opciju: ");
+            j=choose_from_menu(j+1);
+            j=j-1;
         }
-        printf("Odaberite opciju: ");
-       j=choose_from_menu(j+1);
-        j=j-1;
     }
     fclose(imena_kat);
     imena_kat=fopen("imena_kat.txt","w");
