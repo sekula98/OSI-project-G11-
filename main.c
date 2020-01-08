@@ -35,8 +35,6 @@ void choose_category(FILE* fcategories, char*); //bira kategoriju dogadjaja
 void add_event(NODE**, EVENT); //dodaje novi dogadjaj
 EVENT event_info(); //unos informacija o dogadjaju
 void delete_bsn(char*); //brise \n na kraju stringa
-void quiz(); //Kviz
-void comment_event(char*); //Prikaz postojecih i dodavanje novi komentara na dogadjaj. Argument je ime dogadjaja
 int list_is_empty(NODE*);
 void delete_last_node(NODE*);
 int delete_event(NODE *, NODE** );//Brise dogadjaj koji se salje kao arg.
@@ -64,7 +62,7 @@ int main() {
     pull_from_folder(&head);
     kreiranje_def_kat();
     login();
-    fgets(trash,201,stdin);
+    //fgets(trash,201,stdin);
     do
     {   printf("\nOpcije:");
         printf("\n--------------------------------------------------------------------------------");
@@ -75,6 +73,7 @@ int main() {
         printf("\n================================================================================\n\n");
         if (y==1)
         {
+            trg=0;
             do
             {   printf("\nOpcije:");
                 printf("\n--------------------------------------------------------------------------------");
@@ -259,17 +258,12 @@ void citanje_podataka(char *id,char* pass)
     FILE*F=fopen("podaci.txt","r");
     if(F)
     {
-        while(!feof(F))
-        {
-            fscanf(F,"%s",pom);
-            if(!c)
-            {
-                strcpy(id,pom);
-                c++;
-            }
-            else
-                strcpy(pass,pom);
-        }
+        fgets(pom, 51, F);
+        delete_bsn(pom);
+        strcpy(id, pom);
+        fgets(pom, 51, F);
+        delete_bsn(pom);
+        strcpy(pass, pom);
     }
     else
         printf("Ne moze se otvoriti datoteka");
@@ -310,18 +304,18 @@ void login()
         citanje_podataka(user,pass);
         if (pom==0)
         {
-            printf("Unesi ime:\n");
-            scanf("%s",kor_ime);
+            printf("Unesite ime: ");
+            fgets(kor_ime,51, stdin);
+            delete_bsn(kor_ime);
         }
-        printf("Unesi sifru:\n");
+        printf("Unesite sifru: ");
         unos_kor_sifre(kor_sifra);
-
-        if(!strcmp(kor_ime,user))
+        if(strcmp(kor_ime,user)==NULL)
         {
-            if(!strcmp(kor_sifra,pass))
+            if(strcmp(kor_sifra,pass)==NULL)
             {
                 dozvola=1;
-                printf("\nDobro dosli %s!\n",kor_ime);
+                printf("\n\n                            > Dobro dosli '%s'! <                            \n\n",kor_ime);
             }
             else
             {
@@ -361,13 +355,14 @@ void kreiranje_def_kat()
     fclose(f4);
 }
 void dodavanje_kategorije()
-{ FILE* imena_kat;
-    char nova_kategorija[50];
+{   FILE* imena_kat;
+    char nova_kategorija[100];
+
     printf("\nUnesite ime nove kategorije: ");
-    //getchar();
-    fgets(nova_kategorija,51,stdin);
+    fgets(nova_kategorija,101,stdin); delete_bsn(nova_kategorija);
     imena_kat=fopen("imena_kat.txt","a");//upisuje imena kategorija u datoteku
-    fprintf(imena_kat,"%s",nova_kategorija);//
+    fprintf(imena_kat,"%s\n",nova_kategorija);
+
     fclose(imena_kat);
 }
 void dodavanje_komentara(char *imee)
@@ -375,12 +370,12 @@ void dodavanje_komentara(char *imee)
     char novi_komentar[200];
     char ime[50];FILE* f;
     printf("Unesite komentar\n");
-    fgets(novi_komentar,201,stdin);
+    fgets(novi_komentar,201,stdin); delete_bsn(novi_komentar);
     //delete_bsn(novi_komentar);
     strcpy(ime,imee);
     strcat(ime," komentari.txt");
     f=fopen(ime,"a");
-    fprintf(f,"%s",novi_komentar);
+    fprintf(f,"%s\n",novi_komentar);
     fclose(f);
 }
 void brisanje_komentara(char *imee)
@@ -392,6 +387,8 @@ void brisanje_komentara(char *imee)
     i=0;
  strcpy(ime,imee);
     strcat(ime," komentari.txt");
+    f=fopen(ime,"a");
+     fclose(f);
     f=fopen(ime,"r");
     if(f)
     {
@@ -446,15 +443,15 @@ void prikaz_komentara(char* imee)
     char ime[50];FILE *f;
    strcpy(ime,imee);
     strcat(ime," komentari.txt");
+    f=fopen(ime,"a");
+     fclose(f);
     f=fopen(ime,"r");
-    if(f)
-    {
         fseek (f, 0, SEEK_END);
         int size = ftell(f);
         rewind(f);
         if (0 == size)
         {
-            printf("Nema komentara za izabrani dogadjaj");
+            printf("\nNema komentara za izabrani dogadjaj");
         }
         else
         {
@@ -463,13 +460,13 @@ void prikaz_komentara(char* imee)
 	printf("\n================================================================================\n");
             while(fgets(ispis_kom,51,f))
             {
-                printf("-  %s",ispis_kom);
+                printf("- %s",ispis_kom);
             }
     printf("\n================================================================================\n");
-        }
-}
 
+}
     fclose(f);
+
 }
 
 void prikaz_kategorija()
@@ -519,17 +516,20 @@ void brisanje_kategorije()
         }
         else
         {
-            printf("Izaberite koju kategoriju zelite da izbrisete\n");
+            printf("\nKategorije: ");
+            printf("\n--------------------------------------------------------------------------------");
             while(fgets(niz_kat,51,imena_kat)) //dodaje kategoriju u niz
             {
+                delete_bsn(niz_kat);
                 pom[i] = (char *)calloc(strlen(niz_kat) + 1, sizeof(char));
                 strcpy(pom[i++], niz_kat);
             }
             for(j=0; j<i; j++)
             {
-                printf(" %d. %s",j+1,pom[j]);
+                printf("\n%d. %s",j+1,pom[j]);
             }
-            printf("Odaberite opciju: ");
+            printf("\n--------------------------------------------------------------------------------");
+            printf("\nOdaberite kategoriju: ");
             j=choose_from_menu(j+1);
             j=j-1;
         }
@@ -542,7 +542,7 @@ void brisanje_kategorije()
     }
     for(o=0; o<i-1; o++)
     {
-        fprintf(imena_kat,"%s",pom[o]);
+        fprintf(imena_kat,"%s\n",pom[o]);
         free(pom[o]);
     }
     fclose(imena_kat);
@@ -725,53 +725,6 @@ NODE* choose_event(NODE* list, int n) {
 void delete_bsn(char* s) {
 	if ((strlen(s) > 0) && (s[strlen(s) - 1] == '\n'))
 		s[strlen(s) - 1] = '\0';
-}
-
-void quiz() {
-	FILE* quizf;
-	FILE* quizanswers;
-	int sum = 0;
-	char s[100];
-	char a[10];
-	char af[2];
-	int i;
-	if ((quizf = fopen("quiz data.txt", "r")) && (quizanswers = fopen("quiz answers.txt", "r"))) {
-		for (i = 0; i < 3; i++) {
-			printf("\n");
-			fgets(s, 101, quizf); printf("%s", s);
-			fgets(s, 101, quizf); printf("%s", s);
-			fscanf(quizanswers,"%s", af);
-			printf("\nUnesite slovo ispred tacnog odgovora: "); scanf("%s", a);
-			if (!strcmp(af, a)) {
-				sum++;
-				printf("\nTacan odgovor!");
-			}
-			else {
-				printf("\nNetacan odgovor!");
-				printf("\nTacan odgovor je pod %s", af);
-
-			}
-		}
-		printf("\nBroj tacnih odgovora: %d", sum);
-	}
-	else printf("Greska pri pokretanju kviza!");
-}
-
-void comment_event(char* name) {
-	FILE* commentsf;
-	char tmp[120];
-	strcpy(tmp, name);
-	strcat(tmp, " komentari.txt");
-	if (commentsf = fopen(tmp, "a+")) {
-		printf("\nDosadasnji komentari:\n\n");
-		while (fgets(tmp, 121, commentsf))
-			printf("%s", tmp);
-		printf("\nUnesite svoj komentar:\n");// napraviti opciju Da li zelite da unesete svoj komentar.
-		fgets(tmp, 121, stdin);
-		fprintf(commentsf, "%s\n", tmp);
-	}
-	else printf("Greska pri otvaranju datoteke sa komentarima!");
-
 }
 
 void change_info(NODE* node) {
@@ -1057,6 +1010,6 @@ int date_input(int size, char* date) {
 			return 1;
 		}
 	}
-	printf("  Nedozvoljen unos! Pokusajte ponovo.");
+	printf("\nNedozvoljen unos! Pokusajte ponovo.");
 	return 0;
 }
