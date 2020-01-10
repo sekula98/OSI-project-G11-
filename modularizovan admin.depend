@@ -13,17 +13,31 @@
 1578658158 c:\users\ift-pc\desktop\modularizovan admin\funkcije.c
 	"funkcije.h"
 
-1578664507 source:c:\users\bursac\downloads\new folder (2)\main.c
+1578663768 source:c:\users\bursac\downloads\modularizovan admin\modularizovan admin\main.c
 	"funkcije.h"
 	"funkcije.c"
 
-1578660514 c:\users\bursac\downloads\new folder (2)\funkcije.h
+1578655812 c:\users\bursac\downloads\modularizovan admin\modularizovan admin\funkcije.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
 	<string.h>
 	<ctype.h>
 
-1578664447 c:\users\bursac\downloads\new folder (2)\funkcije.c
+1578658158 c:\users\bursac\downloads\modularizovan admin\modularizovan admin\funkcije.c
+	"funkcije.h"
+
+1578663768 source:c:\users\bursac\downloads\user projekt\user projekt\main.c
+	"funkcije.h"
+	"funkcije.c"
+
+1578655812 c:\users\bursac\downloads\user projekt\user projekt\funkcije.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+
+1578658158 c:\users\bursac\downloads\user projekt\user projekt\funkcije.c
 	"funkcije.h"
 

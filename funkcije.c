@@ -2,6 +2,7 @@
 
 void read_user_info(char *id, char* pass)
 {
+	int c = 0;
 	char tmp[50];
 	FILE*F = fopen("podaci.txt", "r");
 	if (F)

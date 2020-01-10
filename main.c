@@ -1,9 +1,10 @@
 #include "funkcije.h"
 #include "funkcije.c"
-
+wew
 int main() {
-	int x, y, trg = 0, n, m, h, g;
+	int i = 0, x, y, trg = 0, n, m, empty, h, g;
 	char trash[200];
+	int dozvola = 0;
 	NODE* head = NULL;
 	NODE*pom = NULL;
 

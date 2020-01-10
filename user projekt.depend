@@ -1,0 +1,37 @@
+# depslib dependency file v1.0
+1578662738 source:c:\users\ift-pc\desktop\user projekt\main.c
+	"user_funkcije.h"
+	"user_funkcije.c"
+
+1578662136 c:\users\ift-pc\desktop\user projekt\user_funkcije.h
+	<stdio.h>
+	<stdlib.h>
+	<windows.h>
+
+1578662702 c:\users\ift-pc\desktop\user projekt\user_funkcije.c
+	"user_funkcije.h"
+
+1578662738 source:c:\users\bursac\downloads\user projekt\user projekt\main.c
+	"user_funkcije.h"
+	"user_funkcije.c"
+
+1578662136 c:\users\bursac\downloads\user projekt\user projekt\user_funkcije.h
+	<stdio.h>
+	<stdlib.h>
+	<windows.h>
+
+1578662702 c:\users\bursac\downloads\user projekt\user projekt\user_funkcije.c
+	"user_funkcije.h"
+
+1578683560 source:c:\users\bursac\desktop\projekat\osi-project-g11-\main_korisnik.c
+	"user_funkcije.h"
+	"user_funkcije.c"
+
+1578684137 c:\users\bursac\desktop\projekat\osi-project-g11-\user_funkcije.h
+	<stdio.h>
+	<stdlib.h>
+	<windows.h>
+
+1578662702 c:\users\bursac\desktop\projekat\osi-project-g11-\user_funkcije.c
+	"user_funkcije.h"
+
