@@ -1,0 +1,29 @@
+# depslib dependency file v1.0
+1578658158 source:c:\users\ift-pc\desktop\modularizovan admin\main.c
+	"funkcije.h"
+	"funkcije.c"
+
+1578655812 c:\users\ift-pc\desktop\modularizovan admin\funkcije.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+
+1578658158 c:\users\ift-pc\desktop\modularizovan admin\funkcije.c
+	"funkcije.h"
+
+1578664507 source:c:\users\bursac\downloads\new folder (2)\main.c
+	"funkcije.h"
+	"funkcije.c"
+
+1578660514 c:\users\bursac\downloads\new folder (2)\funkcije.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+
+1578664447 c:\users\bursac\downloads\new folder (2)\funkcije.c
+	"funkcije.h"
+
