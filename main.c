@@ -87,15 +87,15 @@ int main() {
                     dodavanje_kategorije();
                 }
 
-                if (x==1)
+                else if (x==1)
                 {
                     prikaz_kategorija();
                 }
-                if(x==3)
+                else if(x==3)
                 {
                     brisanje_kategorije();
                 }
-                if(x==4)
+                else if(x==4)
                     trg=1;
             }
             while(!trg);
@@ -167,7 +167,7 @@ int main() {
                     add_event(&head, event_info());
                     push_to_folder(head);
                 }
-                if (x==3)
+                else if (x==3)
                 {
                     if(list_is_empty(head))
                         printf("\n Lista dogadjaja je prazna!\n");
@@ -182,23 +182,33 @@ int main() {
                     }
 
                 }
-                if (x==4)
+                else if (x==4)
                 {
                     if(list_is_empty(head))
                         printf("\n Lista dogadjaja je prazna!\n");
                     else
                     {
-                        n=print_all_events(head);
-                        printf("\nIzaberite dogadjaj koji zelite da izmjenite: ");
+                        printf("\nLista dogadjaja:");
                         printf("\n--------------------------------------------------------------------------------");
+                        n=print_all_events(head);
+                        printf("\n--------------------------------------------------------------------------------");
+                        printf("\nIzaberite dogadjaj koji zelite da izmjenite: ");
                         m=choose_from_menu(n);
+                        printf("\n--------------------------------------------------------------------------------");
                         printf("\n================================================================================\n\n");
                         pom=choose_event(head,m);
                         print_event_info(pom);
+                        int tmp=1;
+                        do{
                         change_info(pom);
+                        printf("\n1. Nova izmjena  2.Nazad");
+                        printf("\n--------------------------------------------------------------------------------");
+                        printf("\nOdaberite opciju: ");
+                        if(choose_from_menu(2)==2) tmp=0;
+                        }while(tmp);
                     }
                 }
-                if (x==5)
+                else if (x==5)
                 {
                     if(list_is_empty(head))
                         printf("\nLista dogadjaja je prazna!\n");
@@ -215,7 +225,7 @@ int main() {
                         printf("\n================================================================================\n\n");
                         do
                         {
-                            printf("\n1.Dodavanje komentara 2.Pregled komentara 3.Brisanje komentara\n 4.Nazad");
+                            printf("\n1.Dodavanje komentara 2.Pregled komentara 3.Brisanje komentara\n4.Nazad");
                             printf("\n--------------------------------------------------------------------------------");
                             printf("\nOdaberite opciju: ");
                             g=choose_from_menu(4);
@@ -224,21 +234,21 @@ int main() {
                             {
                                 dodavanje_komentara(pom->info.name);
                             }
-                            if(g==2)
+                            else if(g==2)
                             {
                                 prikaz_komentara(pom->info.name);
                             }
-                            if(g==3)
+                            else if(g==3)
                             {
                                 brisanje_komentara(pom->info.name);
                             }
-                            if(g==4)
+                            else if(g==4)
                                 trg1=1;
                         }
                         while(!trg1);
                     }
                 }
-                if (x==6)
+                else if (x==6)
                     trg=1;
             }
             while(!trg);
@@ -595,25 +605,20 @@ EVENT event_info() {
 	printf("\nVrijeme odrzavanja: "); fgets(event.time, 21, stdin); delete_bsn(event.time);
 	printf("\nLokacija odrzavanja: "); fgets(event.location, 101, stdin); delete_bsn(event.location);
 	printf("\nOpis dogadjaja: "); fgets(event.description, 201, stdin); delete_bsn(event.description);
-	printf("Da li zelite dodati komentar?\n"); printf("\n1.Da 2.Ne\n");
-    do {
-        fgets(pom,51,stdin);
-        if(pom[0]=='1')
+	printf("\nDa li zelite dodati komentar?  "); printf("1.Da 2.Ne"); printf("\nOdaberite opciju: ");
+	int m=choose_from_menu(2);
+        if(m==1)
         {
             dodavanje_komentara(event.name);
-            break;
         }
-        else if (pom[0]=='2')
+        else if (m==2)
         {
             strcpy(ime,event.name);
             strcat(ime," komentari.txt");
             f=fopen(ime,"w");
             fclose(f);
         }
-            break;
-        printf("Pogresan unos\n");
-    }
-    while(pom[0]!='1' || pom[0]!='2');
+
     return event;
 }
 
@@ -642,7 +647,7 @@ void pull_from_folder(NODE** head) {
 	else printf("Greska pri otvaranju datoteke sa dogadjajima za skidanje podataka o dogadjajima!");
 }
 
-void push_to_folder(NODE*node) {
+void push_to_folder(NODE* node) {
 	FILE* eventsf;
 	if (eventsf = fopen("Dogadjaji.txt", "w")) {
 		while (node) {
@@ -681,7 +686,7 @@ int print_all_events_info(NODE* list) {
 	printf("\n                              LISTA  DOGADJAJA                                  ");
 	printf("\n================================================================================");
 	while (list) {
-		printf("\nIme: %s", list->info.name);
+		printf("\nNaziv: %s", list->info.name);
 		int dd = atoi(list->info.day), mm = atoi(list->info.month), yy = atoi(list->info.year);
 		printf("\nDatum: %02d/%02d/%4d", dd, mm, yy);
 		printf("\nVrijeme: %s", list->info.time);
@@ -706,7 +711,7 @@ int number_of_events(NODE*list)
 }
 
 void print_event_info(NODE* node) {
-	printf("\nIme: %s", node->info.name);
+	printf("\nNaziv: %s", node->info.name);
 	int dd = atoi(node->info.day), mm = atoi(node->info.month), yy = atoi(node->info.year);
 	printf("\nDatum: %02d/%02d/%4d", dd, mm, yy);
 	printf("\nVrijeme: %s", node->info.time);
@@ -732,11 +737,13 @@ void change_info(NODE* node) {
 	FILE*fcategories;
 	char category[100];
 	printf("\nSta zelite izmjeniti? ");
+	printf("\n--------------------------------------------------------------------------------");
 	printf("\n1.Naziv        2.Datum        3.Vrijeme");
 	printf("\n4.Lokacija     5.Kategorija   6.Opis   ");
-
+	printf("\n--------------------------------------------------------------------------------");
+    printf("\nOdaberite opciju: ");
     tmp=choose_from_menu(6);
-	if (tmp == 1) { printf("\nIme: "); fgets(node->info.name,100,stdin); }
+	if (tmp == 1) { printf("\nNaziv: "); fgets(node->info.name,101,stdin); delete_bsn(node->info.name);}
 	else if (tmp == 2) {
 		printf("\nDatum odrzavanja: ");
 		int i;
@@ -745,10 +752,10 @@ void change_info(NODE* node) {
 		do { printf("\nGodina: "); i = date_input(9999, node->info.year); } while (!i);
 	}
 	else if (tmp == 3) {
-		printf("\nVrijeme:");  fgets(node->info.time,100,stdin);
+		printf("\nVrijeme:");  fgets(node->info.time,101,stdin); delete_bsn(node->info.time);
 	}
 	else if (tmp == 4) {
-		printf("\nLokacija:");  fgets(node->info.location,100,stdin);
+		printf("\nLokacija:");  fgets(node->info.location,101,stdin); delete_bsn(node->info.location);
 	}
     else if (tmp == 5)
     {
@@ -763,7 +770,7 @@ void change_info(NODE* node) {
 
 	}
 	else if (tmp == 6) {
-		printf("\nOpis:");  fgets(node->info.description,100,stdin);
+		printf("\nOpis:");  fgets(node->info.description,201,stdin); delete_bsn(node->info.description);
 	}
 	else printf("Pogresan unos!"); //Onemoguciti pogresan unos!
 }
@@ -843,7 +850,7 @@ void sort_by_name(NODE** head, int count)
 
 			if (strcmp(p1->info.name, p2->info.name) > 0) {
 
-				/* update the link after swapping */
+				/* azuriraj  vezu nakon zamjene*/
 				*h = swap(p1, p2);
 				swapped = 1;
 			}
@@ -851,7 +858,7 @@ void sort_by_name(NODE** head, int count)
 			h = &(*h)->next;
 		}
 
-		/* break if the loop ended without any swap */
+		/* prekini ako je iteracija zavrsena bez zamjene */
 		if (swapped == 0)
 			break;
 	}
@@ -883,7 +890,7 @@ void sort_by_date(NODE** head, int count)
 
 			if (sum1 > sum2) {
 
-				/* update the link after swapping */
+				/* azuriraj  vezu nakon zamjene*/
 				*h = swap(p1, p2);
 				swapped = 1;
 			}
@@ -891,7 +898,7 @@ void sort_by_date(NODE** head, int count)
 			h = &(*h)->next;
 		}
 
-		/* break if the loop ended without any swap */
+		/* prekini ako je iteracija zavrsena bez zamjene */
 		if (swapped == 0)
 			break;
 	}
@@ -914,7 +921,7 @@ void sort_by_location(NODE** head, int count)
 
 			if (strcmp(p1->info.location, p2->info.location) > 0) {
 
-				/* update the link after swapping */
+				/* azuriraj  vezu nakon zamjene*/
 				*h = swap(p1, p2);
 				swapped = 1;
 			}
@@ -922,7 +929,7 @@ void sort_by_location(NODE** head, int count)
 			h = &(*h)->next;
 		}
 
-		/* break if the loop ended without any swap */
+		/* prekini ako je iteracija zavrsena bez zamjene */
 		if (swapped == 0)
 			break;
 	}
@@ -944,7 +951,7 @@ void sort_by_category(NODE** head, int count)
 
 			if (strcmp(p1->info.category, p2->info.category) > 0) {
 
-				/* update the link after swapping */
+				/* azuriraj vezu nakon zamjene */
 				*h = swap(p1, p2);
 				swapped = 1;
 			}
@@ -952,7 +959,7 @@ void sort_by_category(NODE** head, int count)
 			h = &(*h)->next;
 		}
 
-		/* break if the loop ended without any swap */
+		/* prekini petlju ako se iteracija zavrsi bez zamjene */
 		if (swapped == 0)
 			break;
 	}

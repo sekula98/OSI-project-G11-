@@ -17,22 +17,25 @@ typedef struct node
     EVENT info;
     struct node* next;
 } NODE;
-void print_today_events(NODE*);
-void print_future_events(NODE*);
-void print_past_events(NODE*);
-void print_event_from_category(NODE*);
+
+int print_all_events_info(NODE* list);
+void print_today_events(NODE* list);
+void print_future_events(NODE* list);
+void print_past_events(NODE* list);
+void print_event_from_category(NODE* list);
+void print_event_info(NODE*);
 void choose_category(FILE* fcategories, char*);
-int choose_from_menu(int );
+int choose_from_menu(int count);
 void quiz();
 void delete_bsn(char* s);
-void pull_from_folder(NODE**); //skida sadrzaj datoteke sa dogadjajima u listu
-void add_event(NODE **, EVENT );
-int list_is_empty(NODE* );
-int print_all_events(NODE* );
-NODE* choose_event(NODE*, int );
-void dodavanje_komentara(char *imee);
-void prikaz_komentara(char* imee);
-void print_event_info(NODE* node);
+void pull_from_folder(NODE** head); //skida sadrzaj datoteke sa dogadjajima u listu
+void add_event(NODE** head, EVENT event);
+int list_is_empty(NODE* list);
+int print_all_events(NODE* list);
+NODE* choose_event(NODE* list, int n);
+void dodavanje_komentara(char*);
+void prikaz_komentara(char*);
+
 int main()
 
 {
@@ -40,6 +43,7 @@ int main()
     NODE* pom = NULL;
     pull_from_folder(&head);
     int trg=0,x,y;
+    char trash[100];
     do
     {
         printf("\nOpcije:");
@@ -55,12 +59,27 @@ int main()
             do
             {
                 printf("\nOpcije:");
-                printf("\n----------------------------------------------------------------------------------------------------------------");
-                printf("\n1.Pregled danasnjih dogadjaja.      2.Pregled dogadjaja odredjenje kategorije. 3.Pregled svih buducih dogadjaja.\n4.Pregled dogadjaja koji su prosli. 5.Nazad");
-                printf("\n----------------------------------------------------------------------------------------------------------------");
+                printf("\n--------------------------------------------------------------------------------");
+                printf("\n1.Pregled svih dogadjaja                  2.Pregled danasnjih dogadjaja\n3.Pregled svih buducih dogadjaja          4.Pregled dogadjaja koji su prosli\n5.Pregled dogadjaja odredjenje kategorije 6.Nazad");
+                printf("\n--------------------------------------------------------------------------------");
                 printf("\nOdaberite opciju: ");
-               x=choose_from_menu(5);
+                x=choose_from_menu(6);
                 if(x==1)
+                {
+                    if(list_is_empty(head))
+                    {
+                        printf("\nLista dogadjaja je prazna!\n");
+                        printf("\n\nPritisnite Enter.");
+                        getchar();
+                    }
+                    else
+                    {
+                        print_all_events_info(head);
+                        printf("\n\nPritisnite Enter.");
+                        fgets(trash, 101, stdin);
+                    }
+                }
+                if(x==2)
                 {
                     if(list_is_empty(head))
                     {
@@ -72,23 +91,23 @@ int main()
                     {
                         print_today_events(head);
                         printf("\n\nPritisnite Enter.");
-                        getchar();
+                        fgets(trash, 101, stdin);
                     }
                 }
 
-                if (x==2)
+                if (x==5)
                 {
                     if(list_is_empty(head))
                     {
                         printf("\nLista dogadjaja je prazna!\n");
                         printf("\n\nPritisnite Enter.");
-                        getchar();
+                        fgets(trash, 101, stdin);
                     }
                     else
                     {
                         print_event_from_category(head);
                         printf("\n\nPritisnite Enter.");
-                        getchar();
+                        fgets(trash, 101, stdin);
                     }
                 }
                 if(x==3)
@@ -97,13 +116,13 @@ int main()
                     {
                         printf("\nLista dogadjaja je prazna!\n");
                         printf("\n\nPritisnite Enter.");
-                        getchar();
+                        fgets(trash, 101, stdin);
                     }
                     else
                     {
                         print_future_events(head);
                         printf("\n\nPritisnite Enter.");
-                        getchar();
+                        fgets(trash, 101, stdin);
                     }
                 }
                 if(x==4)
@@ -112,16 +131,16 @@ int main()
                     {
                         printf("\nLista dogadjaja je prazna!\n");
                         printf("\n\nPritisnite Enter.");
-                        getchar();
+                        fgets(trash, 101, stdin);
                     }
                     else
                     {
                         print_past_events(head);
                         printf("\n\nPritisnite Enter.");
-                        getchar();
+                        fgets(trash, 101, stdin);
                     }
                 }
-                if(x==5)
+                if(x==6)
                     trg1=1;
             }
             while(!trg1);
@@ -133,7 +152,7 @@ int main()
             {
                 printf("\nLista dogadjaja je prazna!\n");
                 printf("\n\nPritisnite Enter.");
-                getchar();
+                fgets(trash, 101, stdin);
             }
             else
             {
@@ -157,13 +176,13 @@ int main()
                     {
                         dodavanje_komentara(pom->info.name);
                         printf("\n\nPritisnite Enter.");
-                        getchar();
+                        fgets(trash, 101, stdin);
                     }
                     if(g==2)
                     {
                         prikaz_komentara(pom->info.name);
                         printf("\n\nPritisnite Enter.");
-                        getchar();
+                        fgets(trash, 101, stdin);
                     }
                     if(g==3)
                         trg=1;
@@ -183,7 +202,7 @@ int main()
             if(l==2)
             {
                 printf("\n\nPritisnite Enter.");
-                getchar();
+                fgets(trash, 101, stdin);
             }
         }
         if(y==4)
@@ -545,6 +564,27 @@ void print_event_info(NODE* node)
     printf("\nLokacija: %s", node->info.location);
     printf("\nKategorija: %s", node->info.category);
     printf("\nOpis: %s", node->info.description);
+}
+
+int print_all_events_info(NODE* list) {
+	int n = 0;
+	printf("\n================================================================================");
+	printf("\n                              LISTA  DOGADJAJA                                  ");
+	printf("\n================================================================================");
+	while (list) {
+		printf("\nNaziv: %s", list->info.name);
+		int dd = atoi(list->info.day), mm = atoi(list->info.month), yy = atoi(list->info.year);
+		printf("\nDatum: %02d/%02d/%4d", dd, mm, yy);
+		printf("\nVrijeme: %s", list->info.time);
+		printf("\nLokacija: %s", list->info.location);
+		printf("\nKategorija: %s", list->info.category);
+		printf("\nOpis: %s", list->info.description);
+		printf("\n--------------------------------------------------------------------------------");
+		list = list->next;
+		n++;
+	}
+	printf("\n================================================================================\n");
+	return n;
 }
 
 
